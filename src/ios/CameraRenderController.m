@@ -16,9 +16,17 @@
 }
 
 - (void)loadView {
-  GLKView *glkView = [[GLKView alloc] init];
-  [glkView setBackgroundColor:[UIColor blackColor]];
-  [self setView:glkView];
+    
+    [super loadView];
+    if (self.view == nil) {
+        self.view = [[UIView alloc] init];
+    }
+    
+    self.glkView = [[GLKView alloc] init];
+    [self.glkView setBackgroundColor:[UIColor blackColor]];
+    
+    [self.view setBackgroundColor:[UIColor yellowColor]];
+    [self.view addSubview:self.glkView];
 }
 
 - (void)viewDidLoad {
@@ -36,10 +44,9 @@
     return;
   }
 
-  GLKView *view = (GLKView *)self.view;
-  view.context = self.context;
-  view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
-  view.contentMode = UIViewContentModeScaleToFill;
+  self.glkView.context = self.context;
+  self.glkView.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+  self.glkView.contentMode = UIViewContentModeScaleToFill;
 
   glGenRenderbuffers(1, &_renderBuffer);
   glBindRenderbuffer(GL_RENDERBUFFER, _renderBuffer);
@@ -50,16 +57,16 @@
     //add drag action listener
     NSLog(@"Enabling view dragging");
     UIPanGestureRecognizer *drag = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
-    [self.view addGestureRecognizer:drag];
+    [self.glkView addGestureRecognizer:drag];
   }
 
   if (self.tapToTakePicture) {
     //tap to take picture
     UITapGestureRecognizer *takePictureTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTakePictureTap:)];
-    [self.view addGestureRecognizer:takePictureTap];
+    [self.glkView addGestureRecognizer:takePictureTap];
   }
 
-  self.view.userInteractionEnabled = self.dragEnabled || self.tapToTakePicture;
+  self.glkView.userInteractionEnabled = self.dragEnabled || self.tapToTakePicture;
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -181,7 +188,7 @@
 
     [self.ciContext drawImage:croppedImage inRect:dest fromRect:[croppedImage extent]];
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
-    [(GLKView *)(self.view)display];
+    [self.glkView display];
     [self.renderLock unlock];
   }
 }

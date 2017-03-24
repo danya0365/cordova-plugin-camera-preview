@@ -19,7 +19,8 @@
   CVOpenGLESTextureRef _lumaTexture;
 }
 
-@property (nonatomic) GLKView *view;
+@property (nonatomic, strong) GLKView *glkView;
+-(void)setViewFrame: (CGRect)frame;
 @property (nonatomic) CameraSessionManager *sessionManager;
 @property (nonatomic) CIContext *ciContext;
 @property (nonatomic) CIImage *latestFrame;
