@@ -29,6 +29,12 @@
     [self.view addSubview:self.glkView];
 }
 
+-(void)setViewFrame: (CGRect)frame
+{
+    self.view.frame = CGRectMake(frame.origin.x, frame.origin.y, CGRectGetWidth(frame), CGRectGetHeight(frame));
+    self.glkView.frame = CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame));
+}
+
 - (void)viewDidLoad {
   [super viewDidLoad];
 
